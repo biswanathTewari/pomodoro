@@ -1,9 +1,9 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Todo } from "../../components";
+import { Todo, TodoForm } from "../../components";
 import { useUser, useGlobalState, actions } from "../../store";
-import { signOutGoogle } from "../../services";
+import { signOutGoogle, addTodoService } from "../../services";
 import "./styles.scss";
 
 const Home = () => {
@@ -14,6 +14,23 @@ const Home = () => {
   } = useUser();
   const navigate = useNavigate();
   const [toggleProfile, setToggleProfile] = React.useState(false);
+  const [showModal, setShowModal] = React.useState(false);
+
+  const addTodo = async (title, description, time) => {
+    try {
+      await addTodoService(title, description, time);
+      showToast({
+        message: "Task added successfully!",
+        type: "success",
+      });
+    } catch (err) {
+      console.log(err);
+      showToast({
+        message: "Something went wrong",
+        type: "error",
+      });
+    }
+  };
 
   const handleSignOut = async () => {
     try {
@@ -66,7 +83,7 @@ const Home = () => {
       <main className="todo padding-default">
         <div className="todo__header">
           <h1 className="h6">Todo List</h1>
-          <div className="todo__add">
+          <div className="todo__add" onClick={() => setShowModal(true)}>
             <p className="text-lg">+</p>
           </div>
         </div>
@@ -78,6 +95,11 @@ const Home = () => {
           <Todo item={"Home work"} />
         </div>
       </main>
+      <TodoForm
+        visible={showModal}
+        onClose={() => setShowModal((p) => !p)}
+        addTodo={addTodo}
+      />
     </div>
   );
 };

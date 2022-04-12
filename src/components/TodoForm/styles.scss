@@ -1,0 +1,38 @@
+@import "../../sass/index.scss";
+
+.todoform {
+  &__inputs {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding: 1rem;
+    padding-bottom: 0;
+    min-height: 50vh;
+    min-width: 30vw;
+    border-radius: 1rem;
+    background-color: white;
+
+    .todoform__input {
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      border: 1px solid #ccc;
+      font-size: 1.2rem;
+      font-family: "Roboto", sans-serif;
+      width: 100%;
+    }
+
+    .form-error-text {
+      margin: 0;
+    }
+
+    &--actions {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+
+      .btn {
+        background-color: $colorPrimary;
+      }
+    }
+  }
+}
