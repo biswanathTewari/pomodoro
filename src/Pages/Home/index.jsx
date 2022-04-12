@@ -2,8 +2,8 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Todo, TodoForm } from "../../components";
-import { useUser, useGlobalState, actions } from "../../store";
-import { signOutGoogle, addTodoService } from "../../services";
+import { useUser, useGlobalState, useTodo, actions } from "../../store";
+import { signOutGoogle, addTodoService, getTodosService } from "../../services";
 import "./styles.scss";
 
 const Home = () => {
@@ -12,6 +12,7 @@ const Home = () => {
     user: { displayName, photoURL },
     dispatchUser,
   } = useUser();
+  const { todos, dispatchTodo } = useTodo();
   const navigate = useNavigate();
   const [toggleProfile, setToggleProfile] = React.useState(false);
   const [showModal, setShowModal] = React.useState(false);
@@ -51,6 +52,19 @@ const Home = () => {
     }
   };
 
+  const setTodos = async (todos) => {
+    dispatchTodo({
+      type: actions.fetchTodosSuccess,
+      payload: todos,
+    });
+  };
+
+  React.useEffect(() => {
+    const unsub = getTodosService(setTodos);
+
+    return () => unsub();
+  }, []);
+
   return (
     <div className="padding-default home">
       <div className="home__header">
@@ -75,7 +89,7 @@ const Home = () => {
           >
             {" "}
             <p className="text-rg">logout</p>{" "}
-            <i class="fas fa-sign-out-alt"></i>
+            <i className="fas fa-sign-out-alt"></i>
           </div>
         </div>
       </div>
@@ -88,11 +102,8 @@ const Home = () => {
           </div>
         </div>
         <div className="todo__list">
-          <Todo item={"Home work"} />
-          <Todo item={"Home work"} />
-          <Todo item={"Home work"} />
-          <Todo item={"Home work"} />
-          <Todo item={"Home work"} />
+          {todos.length > 0 &&
+            todos.map((todo) => <Todo key={todo.id} todo={todo} />)}
         </div>
       </main>
       <TodoForm

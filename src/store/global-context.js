@@ -1,6 +1,6 @@
 import React from "react";
 
-import { actions, UserProvider } from "./";
+import { actions, UserProvider, TodoProvider } from "./";
 
 const GlobalContext = React.createContext();
 
@@ -47,7 +47,9 @@ const GlobalProvider = ({ children }) => {
 
   return (
     <GlobalContext.Provider value={{ globalState, globalDispatch, showToast }}>
-      <UserProvider>{children}</UserProvider>
+      <UserProvider>
+        <TodoProvider>{children}</TodoProvider>
+      </UserProvider>
     </GlobalContext.Provider>
   );
 };
