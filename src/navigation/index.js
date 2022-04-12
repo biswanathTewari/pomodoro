@@ -2,7 +2,7 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 
 import ProtectedRoute from "./ProtectedRoute";
-import { Landing, Todos } from "../Pages";
+import { Landing, Home } from "../Pages";
 
 const Navigation = () => {
   return (
@@ -12,7 +12,7 @@ const Navigation = () => {
         path="/todos"
         element={
           <ProtectedRoute>
-            <Todos />
+            <Home />
           </ProtectedRoute>
         }
       />
