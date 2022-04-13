@@ -6,12 +6,12 @@ const TodoForm = ({ visible, onClose, addTodo, updateTodo, todo }) => {
   const [title, setTitle] = React.useState("");
   const [description, setDescription] = React.useState("");
   const [time, setTime] = React.useState("");
+  const [newTodo, setNewTodo] = React.useState(false);
   const [errors, setErrors] = React.useState({
     title: "",
     description: "",
     time: "",
   });
-  const newTodo = todo.id ? false : true;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -49,6 +49,7 @@ const TodoForm = ({ visible, onClose, addTodo, updateTodo, todo }) => {
     setTitle("");
     setDescription("");
     setTime("");
+    setNewTodo(false);
     onClose();
   };
 
@@ -57,6 +58,7 @@ const TodoForm = ({ visible, onClose, addTodo, updateTodo, todo }) => {
       setTitle(todo.title || "");
       setDescription(todo.description || "");
       setTime(todo.time || "");
+      setNewTodo(todo.id !== "" ? false : true);
     }
   }, [todo]);
 
