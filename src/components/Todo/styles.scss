@@ -1,0 +1,37 @@
+@import "../../sass/index.scss";
+
+.todo__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $colorPrimary;
+    color: white;
+    border-radius: 1rem;
+
+    .todo__actions {
+      .fas {
+        color: white;
+      }
+    }
+  }
+
+  .todo__actions {
+    min-width: 5%;
+    display: flex;
+    justify-content: space-between;
+    @include respond(phone) {
+      min-width: 20%;
+    }
+
+    .fas {
+      color: $colorPrimary;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+  }
+}
