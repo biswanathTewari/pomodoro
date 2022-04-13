@@ -91,6 +91,16 @@ const Home = () => {
     setMyTodo(todo);
   };
 
+  const handleOnClose = () => {
+    setShowModal(false);
+    setMyTodo({
+      title: "",
+      description: "",
+      time: "",
+      id: "",
+    });
+  };
+
   React.useEffect(() => {
     const unsub = getTodosService(setTodos);
 
@@ -103,7 +113,11 @@ const Home = () => {
         <div>
           <h1 className="h5">Welcome back, {displayName} !</h1>
           <h1 className="text-lg">
-            You have 4 tasks assigned, all the best !!
+            {todos.length > 0
+              ? `You have ${todos.length} ${
+                  todos.length === 1 ? "task" : "tasks"
+                } assigned, all the best !!`
+              : `You have no tasks assigned, start now !`}
           </h1>
         </div>
         <div
@@ -134,19 +148,27 @@ const Home = () => {
           </div>
         </div>
         <div className="todo__list">
-          {todos.length > 0 &&
+          {todos.length > 0 ? (
             todos.map((todo) => (
               <Todo key={todo.id} todo={todo} onEdit={handleEdit} />
-            ))}
+            ))
+          ) : (
+            <div className="todo__list--empty">
+              <i className="fas fa-check-double"></i>
+              <h1 className="text-lg my-1">You are all caught up</h1>
+            </div>
+          )}
         </div>
       </main>
-      <TodoForm
-        visible={showModal}
-        todo={myTodo}
-        onClose={() => setShowModal((p) => !p)}
-        addTodo={addTodo}
-        updateTodo={updateTodo}
-      />
+      {showModal && (
+        <TodoForm
+          visible={true}
+          todo={myTodo}
+          onClose={handleOnClose}
+          addTodo={addTodo}
+          updateTodo={updateTodo}
+        />
+      )}
     </div>
   );
 };
