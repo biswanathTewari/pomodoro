@@ -3,7 +3,12 @@ import { useNavigate } from "react-router-dom";
 
 import { Todo, TodoForm } from "../../components";
 import { useUser, useGlobalState, useTodo, actions } from "../../store";
-import { signOutGoogle, addTodoService, getTodosService } from "../../services";
+import {
+  signOutGoogle,
+  addTodoService,
+  getTodosService,
+  updateTodoService,
+} from "../../services";
 import "./styles.scss";
 
 const Home = () => {
@@ -16,22 +21,12 @@ const Home = () => {
   const navigate = useNavigate();
   const [toggleProfile, setToggleProfile] = React.useState(false);
   const [showModal, setShowModal] = React.useState(false);
-
-  const addTodo = async (title, description, time) => {
-    try {
-      await addTodoService(title, description, time);
-      showToast({
-        message: "Task added successfully!",
-        type: "success",
-      });
-    } catch (err) {
-      console.log(err);
-      showToast({
-        message: "Something went wrong",
-        type: "error",
-      });
-    }
-  };
+  const [myTodo, setMyTodo] = React.useState({
+    title: "",
+    description: "",
+    time: "",
+    id: "",
+  });
 
   const handleSignOut = async () => {
     try {
@@ -52,11 +47,48 @@ const Home = () => {
     }
   };
 
+  const addTodo = async (title, description, time) => {
+    try {
+      await addTodoService(title, description, time);
+      showToast({
+        message: "Task added successfully!",
+        type: "success",
+      });
+    } catch (err) {
+      console.log(err);
+      showToast({
+        message: "Something went wrong",
+        type: "error",
+      });
+    }
+  };
+
+  const updateTodo = async (id, title, description, time) => {
+    try {
+      updateTodoService(id, title, description, time);
+      showToast({
+        message: "Task updated successfully!",
+        type: "success",
+      });
+    } catch (err) {
+      console.log(err);
+      showToast({
+        message: "Something went wrong",
+        type: "error",
+      });
+    }
+  };
+
   const setTodos = async (todos) => {
     dispatchTodo({
       type: actions.fetchTodosSuccess,
       payload: todos,
     });
+  };
+
+  const handleEdit = (todo) => {
+    setShowModal(true);
+    setMyTodo(todo);
   };
 
   React.useEffect(() => {
@@ -103,13 +135,17 @@ const Home = () => {
         </div>
         <div className="todo__list">
           {todos.length > 0 &&
-            todos.map((todo) => <Todo key={todo.id} todo={todo} />)}
+            todos.map((todo) => (
+              <Todo key={todo.id} todo={todo} onEdit={handleEdit} />
+            ))}
         </div>
       </main>
       <TodoForm
         visible={showModal}
+        todo={myTodo}
         onClose={() => setShowModal((p) => !p)}
         addTodo={addTodo}
+        updateTodo={updateTodo}
       />
     </div>
   );

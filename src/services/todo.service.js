@@ -6,6 +6,7 @@ import {
   onSnapshot,
   deleteDoc,
   doc,
+  setDoc,
 } from "firebase/firestore";
 
 export const addTodoService = (title, description, time) => {
@@ -32,6 +33,20 @@ export const getTodosService = (setTodos) => {
       setTodos(todos);
     });
     return unsubscribe;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const updateTodoService = (id, title, description, time) => {
+  try {
+    const collectionRef = collection(db, `users/${auth.currentUser.uid}/todos`);
+    const docRef = doc(collectionRef, id);
+    setDoc(docRef, {
+      title,
+      description,
+      time,
+    });
   } catch (err) {
     console.log(err);
   }

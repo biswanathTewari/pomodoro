@@ -2,7 +2,7 @@ import React from "react";
 
 import "./styles.scss";
 
-const TodoForm = ({ visible, onClose, addTodo }) => {
+const TodoForm = ({ visible, onClose, addTodo, updateTodo, todo }) => {
   const [title, setTitle] = React.useState("");
   const [description, setDescription] = React.useState("");
   const [time, setTime] = React.useState("");
@@ -11,14 +11,18 @@ const TodoForm = ({ visible, onClose, addTodo }) => {
     description: "",
     time: "",
   });
+  const newTodo = todo.id ? false : true;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     setErrors({
       title: "",
       description: "",
       time: "",
     });
+
+    //* form validation
     if (title.trim() === "") {
       setErrors((prev) => ({ ...prev, title: "Title is required" }));
     } else if (description.trim() === "") {
@@ -34,7 +38,9 @@ const TodoForm = ({ visible, onClose, addTodo }) => {
         time: "min. 20mins is required",
       }));
     } else {
-      await addTodo(title, description, time);
+      //* add/update
+      if (!newTodo) await updateTodo(todo.id, title, description, time);
+      else await addTodo(title, description, time);
       handleClose();
     }
   };
@@ -45,6 +51,14 @@ const TodoForm = ({ visible, onClose, addTodo }) => {
     setTime("");
     onClose();
   };
+
+  React.useEffect(() => {
+    if (visible) {
+      setTitle(todo.title || "");
+      setDescription(todo.description || "");
+      setTime(todo.time || "");
+    }
+  }, [todo]);
 
   return (
     <div
@@ -86,10 +100,10 @@ const TodoForm = ({ visible, onClose, addTodo }) => {
 
         <div className="todoform__inputs--actions">
           <div className="btn" onClick={handleClose}>
-            cancel
+            Cancel
           </div>
           <div className="btn" onClick={handleSubmit}>
-            add
+            {newTodo ? "Add" : "Update"}
           </div>
         </div>
       </div>
