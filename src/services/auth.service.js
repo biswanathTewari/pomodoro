@@ -7,10 +7,9 @@ const provider = new GoogleAuthProvider();
 export const signInGoogle = async () => {
   try {
     const res = await signInWithPopup(auth, provider);
-    await Storage.store("user", res.user);
     return res.user;
   } catch (err) {
-    console.log(err);
+    throw err;
   }
 };
 
@@ -19,6 +18,6 @@ export const signOutGoogle = async () => {
     await signOut(auth);
     await Storage.store("user", null);
   } catch (err) {
-    console.log(err);
+    throw err;
   }
 };

@@ -26,8 +26,8 @@ const Landing = () => {
       navigate(from, { replace: true });
     } catch (err) {
       showToast({
-        message: "Login Failed",
-        type: "error",
+        message: "Oops! Something went wrong",
+        type: "failed",
       });
     }
   };
@@ -45,7 +45,7 @@ const Landing = () => {
     } catch (err) {
       showToast({
         message: "Logout Failed",
-        type: "error",
+        type: "failed",
       });
     }
   };
