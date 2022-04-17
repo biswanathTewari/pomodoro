@@ -1,0 +1,120 @@
+@import "../../sass/index.scss";
+
+.task__container {
+  background-color: $colorPrimary;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 5rem;
+  padding-bottom: 0;
+
+  @include respond(phone) {
+    padding: 4rem;
+    padding-bottom: 0;
+  }
+
+  .task {
+    background-color: white;
+    width: 100%;
+    border-radius: 1rem 1rem 0 0;
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    padding-top: 5rem;
+
+    @include respond(phone) {
+      padding-top: 2rem;
+      flex-direction: column-reverse;
+      align-items: center;
+    }
+
+    &__timer {
+      flex: 1;
+      flex-basis: 15%;
+
+      .clock {
+        text-align: center;
+
+        .label {
+          display: block;
+          position: relative;
+          top: -185px; /* Move label up to align with clock, according to clock's px height */
+          font-size: 1.25rem;
+          font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
+            sans-serif;
+          font-weight: bolder;
+          color: $colorPrimary;
+
+          @include respond(phone) {
+            display: block;
+            top: -100px;
+          }
+        }
+      }
+
+      .btns {
+        width: 100%;
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        .btn {
+          font-size: 1rem;
+          .fas {
+            font-size: 1rem;
+            margin-right: 0.5rem;
+          }
+
+          &--start {
+            background-color: $colorPrimary;
+            color: white;
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+          }
+
+          &--pause {
+            background-color: $colorPrimary;
+            color: white;
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+          }
+
+          &--reset {
+            background-color: #fffae6;
+            color: #fedd6f;
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+            border: 1px solid #fedd6f;
+          }
+        }
+      }
+    }
+
+    &__info {
+      padding-top: 2rem;
+      padding-left: 2rem;
+      padding-right: 1rem;
+      flex: 2;
+
+      @include respond(phone) {
+        padding-top: 0;
+        flex: 0 0 30%;
+        width: 100%;
+      }
+    }
+  }
+
+  .goback {
+    font-size: 3rem;
+    color: white;
+    position: absolute;
+    top: 1rem;
+    left: 5rem;
+    cursor: pointer;
+
+    @include respond(phone) {
+      left: 4rem;
+    }
+  }
+}

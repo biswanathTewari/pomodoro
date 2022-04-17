@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Todo, TodoForm } from "../../components";
+import { Todo, TodoForm, Loader } from "../../components";
 import { useUser, useGlobalState, useTodo, actions } from "../../store";
 import {
   signOutGoogle,
@@ -17,7 +17,7 @@ const Home = () => {
     user: { displayName, photoURL },
     dispatchUser,
   } = useUser();
-  const { todos, dispatchTodo } = useTodo();
+  const { todos, isLoading, dispatchTodo } = useTodo();
   const navigate = useNavigate();
   const [toggleProfile, setToggleProfile] = React.useState(false);
   const [showModal, setShowModal] = React.useState(false);
@@ -102,6 +102,9 @@ const Home = () => {
   };
 
   React.useEffect(() => {
+    dispatchTodo({
+      type: actions.fetchTodos,
+    });
     const unsub = getTodosService(setTodos);
 
     return () => unsub();
@@ -141,24 +144,30 @@ const Home = () => {
       </div>
 
       <main className="todo padding-default">
-        <div className="todo__header">
-          <h1 className="h6">Todo List</h1>
-          <div className="todo__add" onClick={() => setShowModal(true)}>
-            <p className="text-lg">+</p>
-          </div>
-        </div>
-        <div className="todo__list">
-          {todos.length > 0 ? (
-            todos.map((todo) => (
-              <Todo key={todo.id} todo={todo} onEdit={handleEdit} />
-            ))
-          ) : (
-            <div className="todo__list--empty">
-              <i className="fas fa-check-double"></i>
-              <h1 className="text-lg my-1">You are all caught up</h1>
+        {isLoading ? (
+          <Loader />
+        ) : (
+          <>
+            <div className="todo__header">
+              <h1 className="h6">Todo List</h1>
+              <div className="todo__add" onClick={() => setShowModal(true)}>
+                <p className="text-lg">+</p>
+              </div>
             </div>
-          )}
-        </div>
+            <div className="todo__list">
+              {todos.length > 0 ? (
+                todos.map((todo) => (
+                  <Todo key={todo.id} todo={todo} onEdit={handleEdit} />
+                ))
+              ) : (
+                <div className="todo__list--empty">
+                  <i className="fas fa-check-double"></i>
+                  <h1 className="text-lg my-1">You are all caught up</h1>
+                </div>
+              )}
+            </div>
+          </>
+        )}
       </main>
       {showModal && (
         <TodoForm

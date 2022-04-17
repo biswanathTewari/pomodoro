@@ -1,5 +1,7 @@
 import React from "react";
+
 import { actions } from "./";
+import { auth } from "../utils";
 
 const UserContext = React.createContext({
   isLoggedIn: false,
@@ -30,6 +32,13 @@ const UserProvider = ({ children }) => {
     isLoggedIn: false,
     user: {},
   });
+
+  // firebase session persistence
+  React.useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      if (user) dispatchUser({ type: actions.login, payload: user });
+    });
+  }, []);
 
   return (
     <UserContext.Provider value={{ ...user, dispatchUser }}>
