@@ -2,6 +2,9 @@ import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Chart from "react-apexcharts";
 
+import { Tags } from "../../components";
+import { useGlobalState } from "../../store";
+import { updateTodoService } from "../../services";
 import refresh from "../../assets/music/refresh.wav";
 import "./styles.scss";
 
@@ -9,12 +12,16 @@ const Task = () => {
   const {
     state: { todo },
   } = useLocation();
+  const { showToast } = useGlobalState();
   const navigate = useNavigate();
   let duration = todo ? todo.time * 60 : 60;
   const [isActive, setIsActive] = React.useState(false);
   const [time, setTime] = React.useState(0);
   const [timePercent, setTimePercent] = React.useState(100);
   const [timeDisplay, setTimeDisplay] = React.useState("00:00");
+  const [titleDisplay, setTitleDisplay] = React.useState(
+    todo ? todo.title : ""
+  );
   const [sessionType, setSessionType] = React.useState("FOCUS");
   const breakDuration = 5 * 60; // 5 minutes break
   const audioRef = React.useRef(null);
@@ -59,6 +66,21 @@ const Task = () => {
     ],
   };
 
+  const updateTags = (tag) => {
+    try {
+      updateTodoService(todo.id, todo.title, todo.description, todo.time, tag);
+      showToast({
+        message: "Tag updated successfully!",
+        type: "success",
+      });
+    } catch (err) {
+      showToast({
+        message: "Something went wrong",
+        type: "error",
+      });
+    }
+  };
+
   const handleStart = () => {
     setIsActive(true);
   };
@@ -77,7 +99,7 @@ const Task = () => {
     navigate(-1);
   };
 
-  const secondsToTime = (timeInSecs) => {
+  const secondsToTime = (timeInSecs = 0) => {
     let h = Math.floor(timeInSecs / 3600)
         .toString()
         .padStart(2, "0"),
@@ -88,6 +110,7 @@ const Task = () => {
         .toString()
         .padStart(2, "0");
 
+    setTitleDisplay(`${m}:${s}`);
     return setTimeDisplay(h + "h:" + m + "m:" + s + "s");
   };
 
@@ -122,6 +145,10 @@ const Task = () => {
     setTime(duration);
   }, [todo]);
 
+  React.useEffect(() => {
+    document.title = `${titleDisplay} | Pomodoro`;
+  }, [titleDisplay]);
+
   return (
     <div className="task__container">
       <div className="task">
@@ -139,17 +166,17 @@ const Task = () => {
           <div className="btns">
             {isActive ? (
               <div className="btn btn--pause" onClick={handlePause}>
-                <i class="fas fa-pause"></i>
+                <i className="fas fa-pause"></i>
                 pause
               </div>
             ) : (
               <div className="btn btn--start" onClick={handleStart}>
-                <i class="fas fa-play"></i>
+                <i className="fas fa-play"></i>
                 start
               </div>
             )}
             <div className="btn btn--reset my-1" onClick={handleReset}>
-              <i class="fas fa-redo"></i>
+              <i className="fas fa-redo"></i>
               reset
             </div>
           </div>
@@ -157,9 +184,10 @@ const Task = () => {
         <div className="task__info">
           <h1 className="h3">{todo.title}</h1>
           <p className="text-lg">{todo.description}</p>
+          <Tags tag={todo.tag} updateTags={updateTags} />
         </div>
       </div>
-      <i class="fas fa-angle-left goback" onClick={goBack}></i>
+      <i className="fas fa-angle-left goback" onClick={goBack}></i>
       <audio ref={audioRef}>
         <source src={refresh} type="audio/wav" />
       </audio>
