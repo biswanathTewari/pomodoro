@@ -65,7 +65,8 @@ const Home = () => {
 
   const updateTodo = async (id, title, description, time) => {
     try {
-      updateTodoService(id, title, description, time);
+      let tag = "";
+      updateTodoService(id, title, description, time, tag);
       showToast({
         message: "Task updated successfully!",
         type: "success",

@@ -14,6 +14,7 @@ export const addTodoService = (title, description, time) => {
     title,
     description,
     time,
+    tag: "",
   });
 };
 
@@ -38,7 +39,7 @@ export const getTodosService = (setTodos) => {
   }
 };
 
-export const updateTodoService = (id, title, description, time) => {
+export const updateTodoService = (id, title, description, time, tag) => {
   try {
     const collectionRef = collection(db, `users/${auth.currentUser.uid}/todos`);
     const docRef = doc(collectionRef, id);
@@ -46,6 +47,7 @@ export const updateTodoService = (id, title, description, time) => {
       title,
       description,
       time,
+      tag,
     });
   } catch (err) {
     console.log(err);
