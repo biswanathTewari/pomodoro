@@ -19,6 +19,9 @@ const Task = () => {
   const [time, setTime] = React.useState(0);
   const [timePercent, setTimePercent] = React.useState(100);
   const [timeDisplay, setTimeDisplay] = React.useState("00:00");
+  const [titleDisplay, setTitleDisplay] = React.useState(
+    todo ? todo.title : ""
+  );
   const [sessionType, setSessionType] = React.useState("FOCUS");
   const breakDuration = 5 * 60; // 5 minutes break
   const audioRef = React.useRef(null);
@@ -96,7 +99,7 @@ const Task = () => {
     navigate(-1);
   };
 
-  const secondsToTime = (timeInSecs) => {
+  const secondsToTime = (timeInSecs = 0) => {
     let h = Math.floor(timeInSecs / 3600)
         .toString()
         .padStart(2, "0"),
@@ -107,6 +110,7 @@ const Task = () => {
         .toString()
         .padStart(2, "0");
 
+    setTitleDisplay(`${m}:${s}`);
     return setTimeDisplay(h + "h:" + m + "m:" + s + "s");
   };
 
@@ -140,6 +144,10 @@ const Task = () => {
   React.useEffect(() => {
     setTime(duration);
   }, [todo]);
+
+  React.useEffect(() => {
+    document.title = `${titleDisplay} | Pomodoro`;
+  }, [titleDisplay]);
 
   return (
     <div className="task__container">
